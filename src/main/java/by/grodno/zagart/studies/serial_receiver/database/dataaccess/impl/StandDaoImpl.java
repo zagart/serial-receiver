@@ -1,7 +1,7 @@
-package by.grodno.zagart.studies.serial_receiver.dataaccess.impl;
+package by.grodno.zagart.studies.serial_receiver.database.dataaccess.impl;
 
-import by.grodno.zagart.studies.serial_receiver.dataaccess.AbstractHibernateDao;
-import by.grodno.zagart.studies.serial_receiver.entities.Stand;
+import by.grodno.zagart.studies.serial_receiver.database.dataaccess.AbstractHibernateDao;
+import by.grodno.zagart.studies.serial_receiver.database.entities.Stand;
 
 /**
  * Наследник абстрактного класса слоя dataccess, отвечает за манипуляцию

@@ -1,4 +1,4 @@
-package by.grodno.zagart.studies.serial_receiver.entities;
+package by.grodno.zagart.studies.serial_receiver.database.entities;
 
 import by.grodno.zagart.studies.serial_receiver.interfaces.Identifiable;
 import by.grodno.zagart.studies.serial_receiver.utils.DataUtil;

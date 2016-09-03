@@ -1,7 +1,7 @@
 package by.grodno.zagart.studies.serial_receiver.utils;
 
-import by.grodno.zagart.studies.serial_receiver.entities.Module;
-import by.grodno.zagart.studies.serial_receiver.entities.Stand;
+import by.grodno.zagart.studies.serial_receiver.database.entities.Module;
+import by.grodno.zagart.studies.serial_receiver.database.entities.Stand;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
 

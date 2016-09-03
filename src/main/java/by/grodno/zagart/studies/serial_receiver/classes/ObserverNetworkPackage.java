@@ -1,9 +1,9 @@
 package by.grodno.zagart.studies.serial_receiver.classes;
 
-import by.grodno.zagart.studies.serial_receiver.entities.Module;
-import by.grodno.zagart.studies.serial_receiver.entities.Stand;
-import by.grodno.zagart.studies.serial_receiver.services.impl.ModuleServiceImpl;
-import by.grodno.zagart.studies.serial_receiver.services.impl.StandServiceImpl;
+import by.grodno.zagart.studies.serial_receiver.database.entities.Module;
+import by.grodno.zagart.studies.serial_receiver.database.entities.Stand;
+import by.grodno.zagart.studies.serial_receiver.database.services.impl.ModuleServiceImpl;
+import by.grodno.zagart.studies.serial_receiver.database.services.impl.StandServiceImpl;
 
 import java.io.Serializable;
 

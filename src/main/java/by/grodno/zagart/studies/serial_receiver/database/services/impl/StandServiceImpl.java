@@ -1,8 +1,8 @@
-package by.grodno.zagart.studies.serial_receiver.services.impl;
+package by.grodno.zagart.studies.serial_receiver.database.services.impl;
 
-import by.grodno.zagart.studies.serial_receiver.dataaccess.impl.StandDaoImpl;
-import by.grodno.zagart.studies.serial_receiver.entities.Stand;
-import by.grodno.zagart.studies.serial_receiver.services.AbstractHibernateService;
+import by.grodno.zagart.studies.serial_receiver.database.dataaccess.impl.StandDaoImpl;
+import by.grodno.zagart.studies.serial_receiver.database.entities.Stand;
+import by.grodno.zagart.studies.serial_receiver.database.services.AbstractHibernateService;
 
 /**
  * Наследник абстрактного класса service, отвечает за использование

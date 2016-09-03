@@ -1,4 +1,4 @@
-package by.grodno.zagart.studies.serial_receiver.protocols;
+package by.grodno.zagart.studies.serial_receiver.network.protocols;
 
 
 import by.grodno.zagart.studies.serial_receiver.interfaces.SerialProtocol;
@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import static by.grodno.zagart.studies.serial_receiver.protocols.ObserverSerialProtocol.Constant.MSG_HEAD;
-import static by.grodno.zagart.studies.serial_receiver.protocols.ObserverSerialProtocol.Constant.MSG_TAIL;
+import static by.grodno.zagart.studies.serial_receiver.network.protocols.ObserverSerialProtocol.Constant.MSG_HEAD;
+import static by.grodno.zagart.studies.serial_receiver.network.protocols.ObserverSerialProtocol.Constant.MSG_TAIL;
 
 /**
  * Класс содержит набор констант и методы для обработки данных,

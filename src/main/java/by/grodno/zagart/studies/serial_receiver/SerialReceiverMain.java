@@ -1,7 +1,7 @@
 package by.grodno.zagart.studies.serial_receiver;
 
 import by.grodno.zagart.studies.serial_receiver.classes.SerialReceiverRunner;
-import by.grodno.zagart.studies.serial_receiver.protocols.ObserverSerialProtocol;
+import by.grodno.zagart.studies.serial_receiver.network.protocols.ObserverSerialProtocol;
 
 public class SerialReceiverMain {
 

@@ -1,4 +1,4 @@
-package by.grodno.zagart.studies.serial_receiver.services;
+package by.grodno.zagart.studies.serial_receiver.database.services;
 
 import java.io.Serializable;
 import java.util.List;

@@ -1,4 +1,4 @@
-package by.grodno.zagart.studies.serial_receiver.dataaccess;
+package by.grodno.zagart.studies.serial_receiver.database.dataaccess;
 
 import by.grodno.zagart.studies.serial_receiver.interfaces.Identifiable;
 import by.grodno.zagart.studies.serial_receiver.interfaces.Reflective;

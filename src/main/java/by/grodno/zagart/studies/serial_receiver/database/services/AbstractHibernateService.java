@@ -1,6 +1,6 @@
-package by.grodno.zagart.studies.serial_receiver.services;
+package by.grodno.zagart.studies.serial_receiver.database.services;
 
-import by.grodno.zagart.studies.serial_receiver.dataaccess.GenericDao;
+import by.grodno.zagart.studies.serial_receiver.database.dataaccess.GenericDao;
 import by.grodno.zagart.studies.serial_receiver.interfaces.Identifiable;
 import by.grodno.zagart.studies.serial_receiver.interfaces.Reflective;
 import org.apache.log4j.Logger;
