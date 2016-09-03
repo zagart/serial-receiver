@@ -5,9 +5,8 @@ import by.grodno.zagart.studies.serial_receiver.interfaces.SerialProtocol;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.io.PrintStream;
+import java.util.*;
 
 import static by.grodno.zagart.studies.serial_receiver.network.protocols.ObserverSerialProtocol.Constant.MSG_HEAD;
 import static by.grodno.zagart.studies.serial_receiver.network.protocols.ObserverSerialProtocol.Constant.MSG_TAIL;
@@ -26,6 +25,7 @@ public class ObserverSerialProtocol implements SerialProtocol {
     private static final int speed = 9600;
 
     private final MessageFormatChecker checker = new MessageFormatChecker();
+    private PrintStream output;
 
     @Override
     public int getMessageLength() {
@@ -39,8 +39,8 @@ public class ObserverSerialProtocol implements SerialProtocol {
 
     /**
      * Метод получает объект List с численными значениями, полученными в результате
-     * обработки данных с последовательного порта и обрабатывает их в соотвестви с
-     * требованиями протокола.
+     * обработки данных с последовательного порта и обрабатывает их в соответствии с
+     * требованиями протокола и списком фильтов.
      *
      * @param serialData Набор байт, полученных с последовательного порта, представленный
      *                   в виде объекта List типа Integer.
@@ -53,10 +53,16 @@ public class ObserverSerialProtocol implements SerialProtocol {
             if (serialData.size() == messageLength) {
                 if (checker.isMessage(serialData)) {
                     if (checker.isValidArguments(serialData)) {
-                        String stringData = dataToString(serialData);
-                        if (!stringData.contains("LCD")) {
-                            logger.info(String.format("\nNew data -> %s\n", dataToString(serialData)));
+                        if (!checker.isInFilter(serialData)) {
+                            String data = String.format("New data was extracted -> %s", dataToString(serialData));
+                            if (output != null) {
+                                output.println(data);
+                            } else {
+                                logger.info(data);
+                            }
                             return compilePropertiesString(serialData);
+                        } else {
+                            return "";
                         }
                     } else {
                         throw new IOException("Incorrect MODULE(3)/STATUS(4) arguments.");
@@ -69,6 +75,46 @@ public class ObserverSerialProtocol implements SerialProtocol {
             }
         }
         return "";
+    }
+
+    /**
+     * Метод позволяет установить для объекта класса поток, куда будут
+     * выводиться данные. По умолчанию используется поток System.out.
+     *
+     * @param output Поток вывода.
+     */
+    public void setOutput(PrintStream output) {
+        this.output = output;
+    }
+
+    /**
+     * Метод добавляет в список фильтров класса константу протокола.
+     *
+     * @param filter Константа протокола.
+     * @return true в случае успеха и false иначе.
+     */
+    public boolean addFilter(Constant filter) {
+        return checker.addFilter(filter);
+    }
+
+    /**
+     * Метод удаляет из списка фильтров класса константу протокола.
+     *
+     * @param filter Константа протокола.
+     * @return true в случае успеха и false иначе.
+     */
+    public boolean removeFilter(Constant filter) {
+        return checker.removeFilter(filter);
+    }
+
+    /**
+     * Метод возвращает список констант, являющихся фильтрами для
+     * данного объекта класса-протокола.
+     *
+     * @return Список констант из фильтра.
+     */
+    public Set<Constant> getFilterList() {
+        return checker.getFilterList();
     }
 
     /**
@@ -180,6 +226,58 @@ public class ObserverSerialProtocol implements SerialProtocol {
      * данных, полученных с последовательного порта.
      */
     private class MessageFormatChecker {
+
+        private Set<Constant> filterList = new HashSet<>();
+
+        /**
+         * Метод добавляет в список фильтров значение константы, если его
+         * еще там нет.
+         *
+         * @param filter Новое значение для списка фильтров.
+         */
+        private boolean addFilter(Constant filter) {
+            if (filter != null) {
+                return filterList.add(filter);
+            }
+            return false;
+        }
+
+        /**
+         * Метод удаляет из списка фильтров значение константы, если оно
+         * там есть.
+         *
+         * @param filter Константа из списка фильтров.
+         */
+        private boolean removeFilter(Constant filter) {
+            if (filter != null) {
+                return filterList.remove(filter);
+            }
+            return false;
+        }
+
+        /**
+         * @return Множество фильтров.
+         */
+        private Set<Constant> getFilterList() {
+            return filterList;
+        }
+
+        /**
+         * Метод проверяет, содержат ли данные из параметра значения,
+         * содержащиеся в списке фильтров.
+         *
+         * @param serialData Список для фильтрации.
+         * @return true, если содержат, и false - если нет.
+         */
+        private boolean isInFilter(List<Integer> serialData) {
+            for (Constant filter : filterList) {
+                if (serialData.contains(filter.value)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         /**
          * Метод проверяет наличие меток, указывающих на то, что набор
          * байт является сообщением последовательного порта проекта Observer.
@@ -229,6 +327,7 @@ public class ObserverSerialProtocol implements SerialProtocol {
             }
             return false;
         }
+
     }
 
 }

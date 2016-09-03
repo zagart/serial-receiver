@@ -65,7 +65,7 @@ public class SerialReceiverRunner extends Thread {
             SerialReceiver receiver = new SerialReceiver(portName, protocol);
             receiver.start();
             handleSerialData(receiver);
-            System.out.println("Success. Waiting for input data.");
+            System.out.println("Success. Waiting for input data.\n");
             return false;
         } catch (NoSuchPortException ex) {
             logger.warn(String.format("%s: Port not found -> %s",
