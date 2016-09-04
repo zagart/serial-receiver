@@ -3,10 +3,10 @@ package by.grodno.zagart.studies.serial_receiver.classes;
 
 import by.grodno.zagart.studies.serial_receiver.database.entities.Module;
 import by.grodno.zagart.studies.serial_receiver.database.entities.Stand;
-import by.grodno.zagart.studies.serial_receiver.interfaces.SerialProtocol;
-import by.grodno.zagart.studies.serial_receiver.network.SerialReceiver;
 import by.grodno.zagart.studies.serial_receiver.database.services.impl.ModuleServiceImpl;
 import by.grodno.zagart.studies.serial_receiver.database.services.impl.StandServiceImpl;
+import by.grodno.zagart.studies.serial_receiver.interfaces.SerialProtocol;
+import by.grodno.zagart.studies.serial_receiver.network.SerialReceiver;
 import gnu.io.NoSuchPortException;
 import gnu.io.PortInUseException;
 import gnu.io.UnsupportedCommOperationException;
@@ -15,6 +15,8 @@ import org.apache.log4j.Logger;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.TooManyListenersException;
 
 /**
@@ -22,14 +24,20 @@ import java.util.TooManyListenersException;
  */
 public class SerialReceiverRunner extends Thread {
 
+    public static final Logger logger = Logger.getLogger(SerialReceiverRunner.class);
+    private static ResourceBundle l10n;
+
     private String portName;
     private SerialProtocol protocol;
-    public static final Logger logger = Logger.getLogger(SerialReceiverRunner.class);
-    
-    public SerialReceiverRunner(String portName, SerialProtocol protocol) {
+
+    public SerialReceiverRunner(String portName, SerialProtocol protocol, Locale locale) throws IOException {
         super("SerialReceiverRunner");
+        if (portName == null || protocol == null || locale == null) {
+            throw new IOException("Parameter cannot be null!");
+        }
         this.portName = portName;
         this.protocol = protocol;
+        this.l10n = ResourceBundle.getBundle("messages", locale);
     }
 
     @Override
@@ -40,7 +48,7 @@ public class SerialReceiverRunner extends Thread {
             while (running) {
                 running = serialReceiverRun(portName, protocol);
                 if (running) {
-                    System.out.println("Failed to start serial receiver. Press enter to retry.");
+                    System.out.println(l10n.getString("serialStartError"));
                     systemIn.readLine();
                 }
             }
@@ -61,36 +69,34 @@ public class SerialReceiverRunner extends Thread {
      */
     private synchronized boolean serialReceiverRun(String portName, SerialProtocol protocol) {
         try {
-            System.out.println("Serial receiver trying to start...");
+            System.out.println(String.format(l10n.getString("serialStart"), portName));
             SerialReceiver receiver = new SerialReceiver(portName, protocol);
             receiver.start();
             handleSerialData(receiver);
-            System.out.println("Success. Waiting for input data.\n");
+            System.out.println(l10n.getString("serialStartSuccess"));
             return false;
         } catch (NoSuchPortException ex) {
-            logger.warn(String.format("%s: Port not found -> %s",
-                    this.getName(),
+            logger.warn(String.format("Port %s not found -> %s",
+                    portName,
                     ex.getMessage()));
             return true;
         } catch (PortInUseException ex1) {
-            logger.warn(String.format("%s: Port %s already in use -> %s",
-                    this.getName(),
+            logger.warn(String.format("Port %s already in use -> %s",
                     portName,
                     ex1.getMessage()));
             return true;
         } catch (IOException ex2) {
-            logger.error(String.format("%s: Failed to open input stream -> %s",
-                    this.getName(),
+            logger.error(String.format("Failed to open input stream -> %s",
                     ex2.getMessage()));
             return true;
         } catch (UnsupportedCommOperationException ex3) {
-            logger.error(String.format("%s: Error when configure port -> %s",
-                    this.getName(),
+            logger.error(String.format("Error when configure port %s -> %s",
+                    portName,
                     ex3.getMessage()));
             return true;
         } catch (TooManyListenersException ex4) {
-            logger.error(String.format("%s: Too many listeners for one port -> %s",
-                    this.getName(),
+            logger.error(String.format("Too many listeners for one port (%s) -> %s",
+                    portName,
                     ex4.getMessage()));
             return true;
         }

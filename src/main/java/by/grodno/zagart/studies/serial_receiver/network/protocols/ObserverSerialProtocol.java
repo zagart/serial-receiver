@@ -21,11 +21,19 @@ public class ObserverSerialProtocol implements SerialProtocol {
 
     public static final Logger logger = Logger.getLogger(ObserverSerialProtocol.class);
 
+    private static ResourceBundle l10n;
     private static final int messageLength = 6;
     private static final int speed = 9600;
-
     private final MessageFormatChecker checker = new MessageFormatChecker();
+
     private PrintStream output;
+
+    public ObserverSerialProtocol(Locale locale) throws IOException {
+        if (locale == null) {
+            throw new IOException("Parameter cannot be null!");
+        }
+        this.l10n = ResourceBundle.getBundle("messages", locale);
+    }
 
     @Override
     public int getMessageLength() {
@@ -54,7 +62,8 @@ public class ObserverSerialProtocol implements SerialProtocol {
                 if (checker.isMessage(serialData)) {
                     if (checker.isValidArguments(serialData)) {
                         if (!checker.isInFilter(serialData)) {
-                            String data = String.format("New data was extracted -> %s", dataToString(serialData));
+                            String data = String.format(l10n.getString("observerProtocolNewData"),
+                                    dataToString(serialData));
                             if (output != null) {
                                 output.println(data);
                             } else {

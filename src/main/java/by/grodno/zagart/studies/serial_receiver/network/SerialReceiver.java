@@ -52,6 +52,9 @@ public class SerialReceiver extends Thread {
             UnsupportedCommOperationException,
             TooManyListenersException {
         super("SerialReceiver");
+        if (portName == null || protocol == null) {
+            throw new IOException("Parameter cannot be null!");
+        }
         findPort(portName);
         portInit();
         this.input = this.port.getInputStream();

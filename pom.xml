@@ -18,6 +18,8 @@
         <mysql.version>5.1.6</mysql.version>
         <commons.lang.version>2.6</commons.lang.version>
         <rxtx.version>2.1.7</rxtx.version>
+        <maven.shade.transformer>org.apache.maven.plugins.shade.resource.ManifestResourceTransformer</maven.shade.transformer>
+        <serial_receiver.entry.point>by.grodno.zagart.studies.serial_receiver.SerialReceiverMain</serial_receiver.entry.point>
     </properties>
 
     <dependencies>
@@ -69,6 +71,27 @@
                       <source>1.8</source>
                       <target>1.8</target>
                   </configuration>
+              </plugin>
+              <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-shade-plugin</artifactId>
+                  <version>2.4.3</version>
+                  <executions>
+                      <execution>
+                          <phase>package</phase>
+                          <goals>
+                              <goal>shade</goal>
+                          </goals>
+                          <configuration>
+                              <finalName>serial-receiver-runnable</finalName>
+                              <transformers>
+                                  <transformer implementation="${maven.shade.transformer}">
+                                      <mainClass>${serial_receiver.entry.point}</mainClass>
+                                  </transformer>
+                              </transformers>
+                          </configuration>
+                      </execution>
+                  </executions>
               </plugin>
           </plugins>
       </build>

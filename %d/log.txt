@@ -1,0 +1,13 @@
+2016-09-04 15:11:24,824 DEBUG org.jboss.logging: Logging Provider: org.jboss.logging.Log4jLoggerProvider
+2016-09-04 15:11:26,756 INFO by.grodno.zagart.studies.serial_receiver.database.dataaccess.impl.StandDaoImpl: Stand object saved with id = 1.
+2016-09-04 15:11:26,766 INFO by.grodno.zagart.studies.serial_receiver.database.dataaccess.impl.ModuleDaoImpl: Module object saved with id = 1.
+2016-09-04 15:11:26,786 INFO by.grodno.zagart.studies.serial_receiver.database.dataaccess.impl.StandDaoImpl: Stand object with id = 1 updated.
+2016-09-04 15:11:26,786 INFO by.grodno.zagart.studies.serial_receiver.database.dataaccess.impl.ModuleDaoImpl: Module object with id = 1 updated.
+2016-09-04 15:11:26,796 INFO by.grodno.zagart.studies.serial_receiver.database.dataaccess.impl.StandDaoImpl: Stand object saved with id = 2.
+2016-09-04 15:11:26,796 INFO by.grodno.zagart.studies.serial_receiver.database.dataaccess.impl.ModuleDaoImpl: Module object saved with id = 2.
+2016-09-04 15:11:26,796 INFO by.grodno.zagart.studies.serial_receiver.database.dataaccess.impl.StandDaoImpl: Stand object with id = 2 updated.
+2016-09-04 15:11:26,806 INFO by.grodno.zagart.studies.serial_receiver.database.dataaccess.impl.ModuleDaoImpl: Module object with id = 2 updated.
+2016-09-04 15:11:26,816 INFO by.grodno.zagart.studies.serial_receiver.database.dataaccess.impl.StandDaoImpl: Stand object saved with id = 3.
+2016-09-04 15:11:26,816 INFO by.grodno.zagart.studies.serial_receiver.database.dataaccess.impl.ModuleDaoImpl: Module object saved with id = 3.
+2016-09-04 15:11:26,816 INFO by.grodno.zagart.studies.serial_receiver.database.dataaccess.impl.StandDaoImpl: Stand object with id = 3 updated.
+2016-09-04 15:11:26,826 INFO by.grodno.zagart.studies.serial_receiver.database.dataaccess.impl.ModuleDaoImpl: Module object with id = 3 updated.
