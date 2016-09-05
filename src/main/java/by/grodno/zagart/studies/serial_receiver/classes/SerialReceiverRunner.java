@@ -122,8 +122,9 @@ public class SerialReceiverRunner extends Thread {
                         if (!(message = receiver.pullMessage()).isEmpty()) {
                             Module module = Module.parseSerialString(message);
                             Stand stand = Stand.parseSerialString(message);
-                            ObserverNetworkPackage observerPackage = new ObserverNetworkPackage(module, stand);
-                            observerPackage.persist(standService, moduleService);
+                            ObserverNetworkPackage networkPackage = new ObserverNetworkPackage(module, stand);
+                            networkPackage.persist(standService, moduleService);
+                            printPackageInfo(networkPackage);
                         }
                         this.wait(10);
                     }
@@ -131,7 +132,18 @@ public class SerialReceiverRunner extends Thread {
                     logger.error(String.format("Illegal attempt to get monitor -> ", ex.getMessage()));
                 }
             }
+
+            private void printPackageInfo(ObserverNetworkPackage networkPackage) {
+                System.out.println("*****************************************************************");
+                System.out.printf(l10n.getString("printPackageInfo"),
+                        networkPackage.getStand().getNumber(),
+                        networkPackage.getModule().getName(),
+                        networkPackage.getModule().getStatusInfo());
+                System.out.println("*****************************************************************");
+            }
         }).start();
     }
+
+
 
 }

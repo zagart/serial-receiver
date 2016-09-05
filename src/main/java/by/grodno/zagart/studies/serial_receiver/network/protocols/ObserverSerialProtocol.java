@@ -66,8 +66,6 @@ public class ObserverSerialProtocol implements SerialProtocol {
                                     dataToString(serialData));
                             if (output != null) {
                                 output.println(data);
-                            } else {
-                                logger.info(data);
                             }
                             return compilePropertiesString(serialData);
                         } else {
