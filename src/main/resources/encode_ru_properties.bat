@@ -1,1 +1,0 @@
-native2ascii rus_source.properties messages_ru.properties

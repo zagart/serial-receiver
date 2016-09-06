@@ -26,7 +26,7 @@ public class DataUtil {
     public static Module getNewModule() {
         Module module = new Module();
         module.setName(RandomStringUtils.randomAlphabetic(10));
-        module.setStatusInfo(RandomStringUtils.randomAlphabetic(20));
+        module.setStatus(RandomStringUtils.randomAlphabetic(20));
         module.setStatusChangeDate(new Date());
         return module;
     }
@@ -48,7 +48,8 @@ public class DataUtil {
      * Если текстовая строка, переданная параметром в метод, была сгенерирована
      * методом toString класса Properties либо соответствует ей по формату, то
      * метод сгенерирует из нее объект класса Properties с соответствующими
-     * данными.
+     * данными. Текстовые значения не должны содержать запятых, будет нарушен
+     * формат и метод отработает неправильно.
      *
      * @param strProperties Текстовая строка формата Properties.
      * @return Объект класса Properties.

@@ -74,21 +74,6 @@ public class Stand implements Identifiable<Long>, Serializable {
         this.moduleList.add(module);
     }
 
-    public static Stand parseTcpString(String tcpData) throws NoClassDefFoundError {
-        Stand stand = new Stand();
-        try {
-            Properties properties = DataUtil.convertStringToProperties(tcpData);
-            stand.setNumber(properties.getProperty("number"));
-            stand.setDescription(properties.getProperty("description"));
-        } catch (IOException ex) {
-            logger.error("Stand class. Convertion (string-to-properties) error: " + ex.getStackTrace());
-        }
-        if (stand.getNumber() == null) {
-            throw new NoClassDefFoundError();
-        }
-        return stand;
-    }
-
     public static Stand parseSerialString(String serialData) {
         Stand stand = new Stand();
         try {

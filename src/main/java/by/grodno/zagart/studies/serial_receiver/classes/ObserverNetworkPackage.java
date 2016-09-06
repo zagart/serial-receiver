@@ -33,9 +33,7 @@ public class ObserverNetworkPackage implements Serializable {
         this.stand = stand;
     }
 
-    public Module getModule() {
-        return module;
-    }
+    public Module getModule() { return module; }
     public Stand getStand() {
         return stand;
     }

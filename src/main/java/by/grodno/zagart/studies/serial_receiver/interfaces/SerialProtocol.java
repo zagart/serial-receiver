@@ -14,6 +14,6 @@ public interface SerialProtocol {
 
     int getSpeed();
 
-    String process(List<Integer> data) throws IOException;
+    Object process(List<Integer> data) throws IOException;
 
 }

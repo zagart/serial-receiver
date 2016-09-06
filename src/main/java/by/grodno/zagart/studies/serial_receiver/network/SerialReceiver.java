@@ -14,8 +14,12 @@ import java.util.concurrent.ArrayBlockingQueue;
  * Класс предназначен для обработки данных, поступающих
  * на COM-порт.
  *
+ * Также в конструктор отдается объект класса, чтобы
+ * иметь возможность самостоятельно сконфигурировать класс-
+ * протокол, а не создавать заранее заданный шаблон.
+ *
  * !!! gnu.io -> сторонняя библиотека для работы с последовательным
- * и параллельным портами данных, требует ручной установки и
+ * и параллельным портами данных, требует ручной установки драйвера и
  * добавить Maven зависимость в pom.xml недостаточно.
  * Oracle имеет свою имплемантацию этой библиотеки, однако она
  * не поддерживает ОС Windows.
@@ -32,7 +36,7 @@ public class SerialReceiver extends Thread {
     private final SerialProtocol protocol;
     private final int bufferSize;
     private final int speed;
-    private Queue<String> inbox = new ArrayBlockingQueue<>(Byte.MAX_VALUE);
+    private Queue<Object> inbox = new ArrayBlockingQueue<>(Byte.MAX_VALUE);
 
     /**
      * Конструктор класса создает новый объект, ассоциированный с последовательным
@@ -70,15 +74,16 @@ public class SerialReceiver extends Thread {
 
     /**
      * Метод читает данные с последовательного порта и обрабатывает их
-     * в соответствии с протоколом и складывает в объект этого класса ArrayBlockingQueue.
+     * в соответствии с протоколом и складывает в объект-хранилище этого
+     * класса ArrayBlockingQueue.
      */
     private synchronized void waitData() {
         try {
             List<Integer> data;
             while (input != null) {
                 data = readBytes();
-                String result = protocol.process(data);
-                if (!result.isEmpty()) {
+                Object result = protocol.process(data);
+                if (result != null) {
                     inbox.offer(result);
                 }
                 this.wait(10);
@@ -178,15 +183,18 @@ public class SerialReceiver extends Thread {
 
     /**
      * Метод возвращает одно из полученных и обработанных сообщений (head), но при этом
-     * удаляет его из хранилища.
+     * удаляет его из хранилища. После извлечения необходимо будет выполнить
+     * каст (расширяющее преобразование типа) к типу, объект которого возвращает
+     * метод process класса-имплементатора интерфейса SerialProtocol, который мы
+     * отдали в параметр конструктора.
      *
      * @return Обработанное сообщение COM-порта.
      */
-    public String pullMessage() {
+    public Object pullMessage() {
         if (!inbox.isEmpty()) {
             return inbox.poll();
         }
-        return "";
+        return null;
     }
 
 }

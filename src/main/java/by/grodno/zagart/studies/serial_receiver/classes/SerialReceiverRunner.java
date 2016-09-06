@@ -1,8 +1,6 @@
 package by.grodno.zagart.studies.serial_receiver.classes;
 
 
-import by.grodno.zagart.studies.serial_receiver.database.entities.Module;
-import by.grodno.zagart.studies.serial_receiver.database.entities.Stand;
 import by.grodno.zagart.studies.serial_receiver.database.services.impl.ModuleServiceImpl;
 import by.grodno.zagart.studies.serial_receiver.database.services.impl.StandServiceImpl;
 import by.grodno.zagart.studies.serial_receiver.interfaces.SerialProtocol;
@@ -118,11 +116,8 @@ public class SerialReceiverRunner extends Thread {
             public synchronized void run() {
                 try {
                     while (receiver != null) {
-                        String message;
-                        if (!(message = receiver.pullMessage()).isEmpty()) {
-                            Module module = Module.parseSerialString(message);
-                            Stand stand = Stand.parseSerialString(message);
-                            ObserverNetworkPackage networkPackage = new ObserverNetworkPackage(module, stand);
+                        ObserverNetworkPackage networkPackage;
+                        if ((networkPackage = (ObserverNetworkPackage) receiver.pullMessage()) != null) {
                             networkPackage.persist(standService, moduleService);
                             printPackageInfo(networkPackage);
                         }
@@ -138,7 +133,8 @@ public class SerialReceiverRunner extends Thread {
                 System.out.printf(l10n.getString("printPackageInfo"),
                         networkPackage.getStand().getNumber(),
                         networkPackage.getModule().getName(),
-                        networkPackage.getModule().getStatusInfo());
+                        networkPackage.getModule().getStatus(),
+                        networkPackage.getModule().getValue());
                 System.out.println("*****************************************************************");
             }
         }).start();

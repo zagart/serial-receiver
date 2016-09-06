@@ -1,6 +1,9 @@
 package by.grodno.zagart.studies.serial_receiver.network.protocols;
 
 
+import by.grodno.zagart.studies.serial_receiver.classes.ObserverNetworkPackage;
+import by.grodno.zagart.studies.serial_receiver.database.entities.Module;
+import by.grodno.zagart.studies.serial_receiver.database.entities.Stand;
 import by.grodno.zagart.studies.serial_receiver.interfaces.SerialProtocol;
 import org.apache.log4j.Logger;
 
@@ -10,6 +13,7 @@ import java.util.*;
 
 import static by.grodno.zagart.studies.serial_receiver.network.protocols.ObserverSerialProtocol.Constant.MSG_HEAD;
 import static by.grodno.zagart.studies.serial_receiver.network.protocols.ObserverSerialProtocol.Constant.MSG_TAIL;
+import static by.grodno.zagart.studies.serial_receiver.network.protocols.ObserverSerialProtocol.Constant.NULL;
 
 /**
  * Класс содержит набор констант и методы для обработки данных,
@@ -56,7 +60,7 @@ public class ObserverSerialProtocol implements SerialProtocol {
      * @throws IOException
      */
     @Override
-    public String process(List<Integer> serialData) throws IOException {
+    public ObserverNetworkPackage process(List<Integer> serialData) throws IOException {
         if (!serialData.isEmpty() ) {
             if (serialData.size() == messageLength) {
                 if (checker.isMessage(serialData)) {
@@ -67,9 +71,9 @@ public class ObserverSerialProtocol implements SerialProtocol {
                             if (output != null) {
                                 output.println(data);
                             }
-                            return compilePropertiesString(serialData);
+                            return packSerialData(serialData);
                         } else {
-                            return "";
+                            return null;
                         }
                     } else {
                         throw new IOException("Incorrect MODULE(3)/STATUS(4) arguments.");
@@ -81,7 +85,7 @@ public class ObserverSerialProtocol implements SerialProtocol {
                 throw new IOException("Wrong message length.");
             }
         }
-        return "";
+        return null;
     }
 
     /**
@@ -132,17 +136,25 @@ public class ObserverSerialProtocol implements SerialProtocol {
      * @param serialData
      * @return
      */
-    private String compilePropertiesString(List<Integer> serialData) {
+    private ObserverNetworkPackage packSerialData(List<Integer> serialData) {
+        ObserverNetworkPackage networkPackage;
+        Module module = new Module();
+        Stand stand = new Stand();
         int standNumber = 1;
         int moduleName = 2;
-        int eventDescription = 3;
-        int eventValue = 4;
-        Properties properties = new Properties();
-        properties.put("stand", serialData.get(standNumber));
-        properties.put("module", getConstantDescriptionByValue(serialData.get(moduleName)));
-        properties.put("event", getConstantDescriptionByValue(serialData.get(eventDescription)));
-        properties.put("value", serialData.get(eventValue));
-        return properties.toString();
+        int event = 3;
+        int value = 4;
+        module.setName(getConstantDescriptionByValue(serialData.get(moduleName)));
+        module.setStatus(getConstantDescriptionByValue(serialData.get(event)));
+        if (serialData.get(value) != NULL.value) {
+            module.setValue(String.valueOf(serialData.get(value)));
+        } else {
+            module.setValue(NULL.name());
+        }
+        module.setStatusChangeDate(new Date());
+        stand.setNumber(String.valueOf(serialData.get(standNumber)));
+        networkPackage = new ObserverNetworkPackage(module, stand);
+        return networkPackage;
     }
 
     /**
@@ -207,8 +219,8 @@ public class ObserverSerialProtocol implements SerialProtocol {
         LIGHT_CHANGE (4, "Изменение освещенности."),
         LCD_NEW_OUTPUT (5, "Изменение данных на LCD-дисплее."),
         STAND_MC (10, "Микро-контроллер."),
-        LIGHT_SENSOR (11, "Датчик освещенности."),
-        TEMP_SENSOR (12, "Датчик температуры."),
+        LIGHT_SENSOR (11, "Датчик освещенности (значение в процентах %)."),
+        TEMP_SENSOR (12, "Датчик температуры (значение в градусах Цельсия °C)"),
         LCD_DISPLAY (13, "LCD-дисплей."),
         NULL (200, "Данные отсутствуют или не предусмотрены для этого события/модуля."),
         OERR (201, "Критическая ошибка модуля USART."),

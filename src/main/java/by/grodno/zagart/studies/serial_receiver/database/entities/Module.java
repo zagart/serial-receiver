@@ -24,7 +24,8 @@ public class Module implements Identifiable<Long>, Serializable {
 
     private Long id;
     private String name;
-    private String statusInfo;
+    private String status;
+    private String value;
     private Date statusChangeDate;
     private Stand stand;
 
@@ -40,8 +41,12 @@ public class Module implements Identifiable<Long>, Serializable {
     public void setName(String name) { this.name = name; }
 
     @Column(name = "STATUS")
-    public String getStatusInfo() { return statusInfo; }
-    public void setStatusInfo(String statusInfo) { this.statusInfo = statusInfo; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    @Column(name = "VALUE")
+    public String getValue() { return value; }
+    public void setValue(String value) { this.value = value; }
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "STATUS_DATE")
@@ -62,7 +67,7 @@ public class Module implements Identifiable<Long>, Serializable {
 
         if (!id.equals(module.id)) return false;
         if (name != null ? !name.equals(module.name) : module.name != null) return false;
-        if (statusInfo != null ? !statusInfo.equals(module.statusInfo) : module.statusInfo != null) return false;
+        if (status != null ? !status.equals(module.status) : module.status != null) return false;
         if (statusChangeDate != null ? !statusChangeDate.equals(module.statusChangeDate) : module.statusChangeDate != null)
             return false;
         return stand != null ? stand.equals(module.stand) : module.stand == null;
@@ -72,26 +77,10 @@ public class Module implements Identifiable<Long>, Serializable {
     public int hashCode() {
         int result = id.hashCode();
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (statusInfo != null ? statusInfo.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (statusChangeDate != null ? statusChangeDate.hashCode() : 0);
         result = 31 * result + (stand != null ? stand.hashCode() : 0);
         return result;
-    }
-
-    public static Module parseTcpString(String tcpData) throws NoClassDefFoundError {
-        Module module = new Module();
-        try {
-            Properties properties = DataUtil.convertStringToProperties(tcpData);
-            module.setName(properties.getProperty("name"));
-            module.setStatusInfo(properties.getProperty("status"));
-            module.setStatusChangeDate(new Date());
-        } catch (IOException ex) {
-            logger.error("Module class. Convertion (string-to-properties) error: " + ex.getStackTrace());
-        }
-        if (module.getName() == null || module.getStatusInfo() == null) {
-            throw new NoClassDefFoundError();
-        }
-        return module;
     }
 
     public static Module parseSerialString(String serialData) {
@@ -99,14 +88,14 @@ public class Module implements Identifiable<Long>, Serializable {
         try {
             Properties properties = DataUtil.convertStringToProperties(serialData);
             module.setName(properties.getProperty("module"));
-            module.setStatusInfo(String.format("%s Новое значение -> %s.",
+            module.setStatus(String.format("%s Новое значение -> %s.",
                     properties.getProperty("event"),
                     properties.getProperty("value")));
             module.setStatusChangeDate(new Date());
         } catch (IOException ex) {
             logger.error("Module class. Convertion (string-to-properties) error: " + ex.getStackTrace());
         }
-        if (module.getName() == null || module.getStatusInfo() == null) {
+        if (module.getName() == null || module.getStatus() == null) {
             throw new NoClassDefFoundError();
         }
         return module;
